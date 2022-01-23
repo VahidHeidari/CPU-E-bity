@@ -326,7 +326,7 @@ namespace Assembler
                             // store 0 as operand address
                             OperandAddress = OPERAND.Substring(OPERAND.Length - 2, 2);
                         }
-                        // asemble the object code istruction
+                        // assemble the object code istruction
                         MashineCode = Int2Hex(OpTable[OPCODE].MachineCode);
                         string objCode = MashineCode
                             + ' '
