@@ -21,6 +21,7 @@ data and code. Here, data word is 4-bit wide, and instructions word size is
 12-bit wide. This processor can address 256 words of code and 256 words of data,
 because it has a 8-bit address bus. The block diagram of this CPU is as follows:
 
+
 ![Block Diagram](Images/BlockDiagram.png?raw=true "Block Diagram")
 
 
@@ -36,15 +37,15 @@ operations. For the sake of simplicity, input/output instructions are dropped.
 All operations are done in 3 clock pulses, this means that each instruction
 cycle takes 3 clock, then the ring counter resets to zero after 3 clocks.
 
-In the __first clock__ the CPU sends the content of PC to code address bus and
-reads and decodes the current instruction, at the same time it puts address of
-data into data address register.
+On the __first clock__, the CPU sends the content of PC to code address bus and
+reads and decodes the current instruction, at the same time it copies the
+address of data to data address register.
 
-In the __second clock__ the CPU executes the instruction and the PC increments
+On the __second clock__, the CPU executes the instruction and the PC increments
 by one.
 
-In the __third clock__ the CPU saves the result and ring counter becomes zero to
-begin next cycle.
+On the __third clock__, the CPU saves the result and the ring counter becomes
+zero to perpare for the next machine cycle.
 
 The opcode format is as follows:
 
@@ -52,6 +53,7 @@ The opcode format is as follows:
 
 * __x__: 4 bit instruction
 * __d__: 8 bit data address
+
 
 The following table contains the instruction set for this processor:
 
@@ -88,12 +90,10 @@ to the block diagram that depicted above. The final design is as follows:
 
 
 
-
 # Example Assembly Code
 
 A two-pass assembler is written to translate assembly language into machine
-codes, for example consider the following assembly code:
-
+codes, for example consider the following assembly code, named `source.txt`:
 
 
 ```assembly
@@ -102,24 +102,35 @@ codes, for example consider the following assembly code:
 		BYTE C
 		SHL
 		SHL
+		JMP  LBL
 		SHL
-		ADD A
-		SUB B
-		CLA
+LBL:	Add A
+		Sub B
+		Sub C
+		cla
 		END
 ```
 
 
-After running assembler on this source code, two Intel-Hex formatted outputs
-will be created as follows:
+After running assembler, it asks source code name and output name.
+If there is error(s) in input source code, messages can be found in
+`ErrorList.txt` file. All errors must be solved, unless Intel-Hex outputs could
+not be generated. When there is no error in source code, assembler creates
+intermediate file `source.txt.Intr`, object `source.txt.o`, data address
+`source_ADR.hex`, and machine code `source_OPC.hex` files.
+
+Most important outputs are two Intel-Hex formatted outputs. For example output
+of above source code is as follows:
 
 
 <table>
 <tr>
 	<th>Opcode Hex output file</th>
 	<th>Data Address Hex output file</th>
-</tr>
-<tr><td>
+</tr><tr>
+	<td> `source_OPC.hex` </td>
+	<td> `source_ADR.hex` </td>
+</tr><tr><td>
 
 ```hex
 :0600000007070701020FD3
@@ -137,5 +148,5 @@ will be created as follows:
 </table>
 
 
-These files can be used to test the CPU functionality.
+These files can be used in Proteus to test the CPU functionality.
 

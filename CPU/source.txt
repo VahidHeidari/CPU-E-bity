@@ -5,7 +5,7 @@
 		SHL
 		JMP  LBL
 		SHL
-LBL:		Add A
+LBL:	Add A
 		Sub B
 		Sub C
 		cla
